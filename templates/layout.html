@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chocolate ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="bg-gray-100 font-sans text-gray-700">
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-20">
+      <div
+        class="mx-auto flex max-w-full items-center justify-between px-6 py-4"
+      >
+        <a href="/dashboard">
+          <img
+            src="/static/image/profile.JPG"
+            alt="Chocolate ERP Logo"
+            class="h-10 w-10 rounded-full border border-gray-300"
+          />
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-6 text-sm text-gray-600"
+        >
+          <button
+            class="hover:text-rose-600"
+            aria-label="Search"
+            onclick="alert('Search clicked!')"
+          >
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </button>
+          <button
+            id="darkModeToggle"
+            class="hover:text-rose-600"
+            aria-label="Toggle Dark Mode"
+          >
+            <i data-lucide="moon" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Notification Icon -->
+          <div class="relative" id="notificationWrapper">
+            <button
+              id="notificationBtn"
+              class="relative hover:text-rose-600 focus:outline-none"
+              aria-label="Notifications"
+              type="button"
+            >
+              <i data-lucide="bell" class="w-5 h-5"></i>
+              {% if notifications and notifications|length > 0 %}
+              <span
+                id="notificationBadge"
+                class="absolute top-0 right-0 inline-block w-2 h-2 bg-rose-600 rounded-full animate-pulse"
+              ></span>
+              {% endif %}
+            </button>
+
+            <!-- Notification Dropdown -->
+            <div
+              id="notificationDropdown"
+              class="hidden absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded shadow-md z-50 text-sm"
+            >
+              <div
+                class="p-3 font-semibold border-b border-gray-200 text-gray-700"
+              >
+                Notifications
+              </div>
+              <ul class="max-h-60 overflow-y-auto">
+                {% if notifications %} {% for notif in notifications %}
+                <li class="border-b border-gray-100">
+                  <a
+                    href="{{ notif.url }}"
+                    class="block px-4 py-2 hover:bg-gray-50 text-gray-700"
+                    data-notif-id="{{ notif.id }}"
+                  >
+                    <div class="font-medium">{{ notif.message }}</div>
+                    <div class="text-xs text-gray-400">
+                      {{ notif.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </div>
+                  </a>
+                </li>
+                {% endfor %} {% else %}
+                <li class="px-4 py-2 text-gray-400">No new notifications</li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+
+          <!-- Profile Icon -->
+          <button class="hover:text-rose-600" aria-label="Profile">
+            {% if session.get('user_image') %}
+            <img
+              src="{{ url_for('static', filename='uploads/users/' ~ session['user_image']) }}"
+              alt="User Profile"
+              class="w-8 h-8 rounded-full border border-gray-300 object-cover"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"
+            />
+            <i data-lucide="user-circle" class="w-6 h-6 hidden"></i>
+            {% else %}
+            <i data-lucide="user-circle" class="w-6 h-6"></i>
+            {% endif %}
+          </button>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button
+            id="mobileMenuBtn"
+            class="text-gray-600 hover:text-rose-600"
+            aria-label="Toggle Menu"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sidebar and Content -->
+    <div class="pt-20 flex">
+      <!-- Sidebar --><!-- Sidebar -->
+      <div
+        id="mobileSidebar"
+        class="fixed top-16 left-0 z-10 h-[calc(100vh-4rem)] w-16 md:w-64 bg-white shadow-md transition-all duration-300 overflow-y-auto hover:overflow-y-scroll md:block hidden md:flex flex-col items-center md:items-start space-y-3 py-4 text-gray-600 px-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-rose-400"
+      >
+        <!-- Common Links -->
+        <a
+          href="/dashboard"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="home" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Dashboard</span>
+        </a>
+
+        {% if session['role'] in ['admin', 'employee'] %}
+        <a
+          href="/product-list"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="link" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Specific Link</span>
+        </a>
+        {% endif %} {% if session['role'] == 'admin' %}
+        <hr class="w-full border-t border-gray-300 my-2" />
+        <p class="text-xs font-semibold text-gray-500 mb-1 ml-2">Admin Panel</p>
+
+        <a
+          href="/manage_user"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="user" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Manage Users</span>
+        </a>
+
+        <a
+          href="/view_sales_reports"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="list" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">View Sales Reports</span>
+        </a>
+
+        <a
+          href="/inventory_report"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="file" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Generate Reports</span>
+        </a>
+
+        <a
+          href="/supplier"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="truck" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Supplier Management</span>
+        </a>
+
+        <a
+          href="/view_inventory"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="box" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">View Inventory</span>
+        </a>
+
+        <a
+          href="/sale_report"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Record Sales Transaction</span>
+        </a>
+
+        <a
+          href="/pur_orders"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="truck" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Purchase Orders</span>
+        </a>
+
+        <a
+          href="/s_payments"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="credit-card" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Supplier Payments</span>
+        </a>
+        {% endif %} {% if session['role'] == 'employee' %}
+        <a
+          href="/add_inventory"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="box" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Add Inventory</span>
+        </a>
+
+        <a
+          href="/add-product"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="plus-square" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Add Product</span>
+        </a>
+
+        <a
+          href="/product_batches"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="bar-chart" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Product Batch Management</span>
+        </a>
+
+        <a
+          href="/record"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Record Sale</span>
+        </a>
+
+        <a
+          href="/purchase_orders"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="truck" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Purchase Orders</span>
+        </a>
+
+        <a
+          href="/supplier_payments"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+        >
+          <i data-lucide="credit-card" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Supplier Payments</span>
+        </a>
+        {% endif %}
+
+        <!-- Help and Logout -->
+        <hr class="w-full border-t border-gray-300 my-2" />
+
+        <a
+          href="/help_support"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
+        >
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Access Help/Support</span>
+        </a>
+
+        <a
+          href="/logout"
+          class="flex items-center space-x-2 w-full px-2 py-2 rounded hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+        >
+          <i data-lucide="log-out" class="w-5 h-5"></i>
+          <span class="hidden md:inline text-sm">Logout</span>
+        </a>
+      </div>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6 ml-0 md:ml-64">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div
+          class="flash-message p-2 rounded mb-4 {% if category == 'success' %} bg-green-100 text-green-800 {% elif category == 'error' %} bg-red-100 text-red-800 {% elif category == 'warning' %} bg-yellow-100 text-yellow-800 {% else %} bg-gray-100 text-gray-800 {% endif %}"
+        >
+          {{ message }}
+        </div>
+        {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+      </main>
+    </div>
+
+    <!-- Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        lucide.createIcons();
+
+        const menuBtn = document.getElementById("mobileMenuBtn");
+        const mobileSidebar = document.getElementById("mobileSidebar");
+        const darkToggle = document.getElementById("darkModeToggle");
+        const notifBtn = document.getElementById("notificationBtn");
+        const notifDropdown = document.getElementById("notificationDropdown");
+
+        menuBtn?.addEventListener("click", () => {
+          mobileSidebar?.classList.toggle("hidden");
+        });
+
+        darkToggle?.addEventListener("click", () => {
+          document.documentElement.classList.toggle("dark");
+          document.body.classList.toggle("bg-gray-900");
+          document.body.classList.toggle("text-white");
+        });
+
+        notifBtn?.addEventListener("click", () => {
+          notifDropdown?.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (
+            !document.getElementById("notificationWrapper")?.contains(e.target)
+          ) {
+            notifDropdown?.classList.add("hidden");
+          }
+        });
+
+        document
+          .querySelectorAll("#notificationDropdown a[data-notif-id]")
+          .forEach((link) => {
+            link.addEventListener("click", function (e) {
+              e.preventDefault();
+              const notifId = this.dataset.notifId;
+              const url = this.href;
+
+              fetch(`/notifications/mark_read/${notifId}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-Requested-With": "XMLHttpRequest",
+                },
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    window.location.href = url;
+                  } else {
+                    alert("Error marking notification as read.");
+                  }
+                })
+                .catch(() => alert("Network error."));
+            });
+          });
+
+        setTimeout(() => {
+          document.querySelectorAll(".flash-message").forEach((el) => {
+            el.classList.add(
+              "opacity-0",
+              "transition-opacity",
+              "duration-1000"
+            );
+            setTimeout(() => el.remove(), 1000);
+          });
+        }, 3000);
+      });
+    </script>
+  </body>
+</html>

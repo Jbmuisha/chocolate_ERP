@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="px-4 sm:px-6 lg:px-8 py-6">
+<h2 class="text-xl font-semibold text-rose-600 mb-4">Product List (Table View)</h2>
+
+<!-- Sorting and Filtering Controls -->
+<div class="flex justify-between mb-4">
+
+  <!-- Sorting -->
+  <div class="space-x-4">
+    <a href="{{ url_for('product_list', sort='name', category=category) }}"
+       class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700">
+      Sort by Name
+    </a>
+    <a href="{{ url_for('product_list', sort='price', category=category) }}"
+       class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700">
+      Sort by Price
+    </a>
+  </div>
+
+  <!-- Category Filter -->
+  <div>
+    <select class="bg-gray-100 border border-gray-300 px-4 py-2 rounded"
+            onchange="window.location.href = this.value;">
+      <option value="{{ url_for('product_list', category='all', sort=sort_by) }}"
+        {% if category == 'all' %}selected{% endif %}>All</option>
+      <option value="{{ url_for('product_list', category='chocolate', sort=sort_by) }}"
+        {% if category == 'chocolate' %}selected{% endif %}>Chocolate</option>
+      <option value="{{ url_for('product_list', category='candy', sort=sort_by) }}"
+        {% if category == 'candy' %}selected{% endif %}>Candy</option>
+      <option value="{{ url_for('product_list', category='gifts', sort=sort_by) }}"
+        {% if category == 'gifts' %}selected{% endif %}>Gifts</option>
+    </select>
+  </div>
+
+</div>
+
+<!-- Product Table -->
+<table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+<thead class="bg-rose-600 text-white">
+<tr>
+  <th class="px-4 py-2 text-left">Image</th>
+  <th class="px-4 py-2 text-left">Name</th>
+  <th class="px-4 py-2 text-left">Category</th>
+  <th class="px-4 py-2 text-left">Price</th>
+</tr>
+</thead>
+<tbody>
+{% for product in products %}
+<tr class="border-b hover:bg-gray-50">
+  <td class="px-4 py-2">
+    {% if product.image_data and product.image_mime %}
+      <img src="data:{{ product.image_mime }};base64,{{ product.image_base64 }}"
+           alt="{{ product.name }}"
+           class="h-16 w-16 object-cover rounded" />
+    {% else %}
+      <img src="{{ url_for('static', filename='images/default.png') }}"
+           alt="No image"
+           class="h-16 w-16 object-cover rounded opacity-50" />
+    {% endif %}
+  </td>
+  
+  <td class="px-4 py-2">{{ product.name }}</td>
+  <td class="px-4 py-2">{{ product.category }}</td>
+  <td class="px-4 py-2">${{ product.price }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</section>
+{% endblock %}

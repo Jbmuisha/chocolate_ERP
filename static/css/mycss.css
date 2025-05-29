@@ -1,0 +1,159 @@
+/* Color variables (converted to plain CSS) */
+:root {
+    --p: hsl(213deg 85% 97%);
+    --s: hsl(233deg 36% 38%);
+}
+
+/* Set font-family for all elements */
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Body styles */
+body {
+    user-select: none;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: hsl(218deg 50% 91%);
+    height: 100vh;
+}
+
+/* Screen container styles */
+.screen-1 {
+    background: var(--p);
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    border-radius: 30px;
+    box-shadow: 0 0 2em hsl(231deg 62% 94%);
+    gap: 2em;
+    width: 100%;
+    max-width: 400px; /* Limit the screen size */
+    box-sizing: border-box;
+}
+
+.screen-1 h1 {
+    text-align: center;
+    font-size: 2em;
+    color: var(--s);
+}
+
+.username, .password {
+    background: hsl(0deg 0% 100%);
+    box-shadow: 0 0 2em hsl(231deg 62% 94%);
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border-radius: 20px;
+    color: hsl(0deg 0% 30%);
+}
+
+.username input, .password input {
+    outline: none;
+    border: none;
+    padding: 0.8em;
+    font-size: 1em;
+    border-radius: 10px;
+}
+
+.username input::placeholder, .password input::placeholder {
+    color: hsl(0deg 0% 50%);
+    font-size: 0.9em;
+}
+
+.password .show-hide {
+    cursor: pointer;
+    text-align: right;
+    color: var(--s);
+    font-weight: 600;
+}
+
+/* Login button */
+button {
+    padding: 1em;
+    background: var(--s);
+    color: hsl(0 0 100);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: hsl(233deg 36% 28%);
+}
+
+/* Footer styles */
+.footer {
+    display: flex;
+    font-size: 0.7em;
+    color: hsl(0deg 0% 37%);
+    justify-content: space-between;
+    padding-bottom: 1em;
+}
+
+.footer span {
+    cursor: pointer;
+    color: var(--s);
+    transition: color 0.3s ease;
+}
+
+.footer span:hover {
+    color: hsl(0deg 0% 40%);
+}
+/* Container for your charts and info boxes */
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  /* Each chart box */
+  .chart-box {
+    flex: 1 1 300px; /* grow, shrink, basis */
+    max-width: 600px;
+    min-width: 280px;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .chart-box {
+      max-width: 100%;
+    }
+  }
+  
+  /* Make canvas take full width of container */
+  .chart-box canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 6px;
+  }
+
+  .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+    background-color: #a0aec0;
+  }

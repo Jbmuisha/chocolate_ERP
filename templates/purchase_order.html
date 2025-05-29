@@ -1,0 +1,125 @@
+{% extends 'layout.html' %} {% block content %}
+<div
+  class="bg-white shadow-lg p-8 max-w-4xl w-full mx-auto my-12"
+  style="border-radius: 18px"
+>
+  <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+    Create Purchase Order
+  </h1>
+
+  <form
+    action="{{ url_for('purchase_orders') }}"
+    method="POST"
+    class="space-y-6"
+  >
+    <div>
+      <label for="supplier_id" class="block mb-2 font-semibold text-gray-700"
+        >Supplier:</label
+      >
+      <select
+        name="supplier_id"
+        required
+        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        {% for supplier in suppliers %}
+        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Order Items Section -->
+    <div id="order-items" class="space-y-4">
+      <h3 class="text-lg font-semibold mb-2">Order Items</h3>
+      <div class="flex space-x-2">
+        <select
+          name="product_id[]"
+          required
+          class="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
+          <option value="" disabled selected>Select Product</option>
+          {% for product in products %}
+          <option value="{{ product.id }}">{{ product.name }}</option>
+          {% endfor %}
+        </select>
+        <input
+          type="number"
+          name="quantity[]"
+          min="1"
+          placeholder="Quantity"
+          required
+          class="w-24 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+        />
+        <input
+          type="number"
+          name="unit_price[]"
+          step="0.01"
+          min="0"
+          placeholder="Unit Price"
+          required
+          class="w-28 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+        />
+        <button
+          type="button"
+          class="remove-item-btn text-red-600 hover:text-red-800 font-bold px-2"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      id="add-item-btn"
+      class="mt-2 text-red-600 hover:text-red-800 font-semibold"
+    >
+      + Add Item
+    </button>
+
+    <button
+      type="submit"
+      class="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-md shadow-md transition duration-300 w-full"
+    >
+      Create Order
+    </button>
+  </form>
+
+  <!-- Purchase Orders Table -->
+  <section class="mt-12">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+      Purchase Orders
+    </h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300 rounded-lg shadow-sm">
+        <thead class="bg-red-600 text-white">
+          <tr>
+            <th class="py-3 px-6 text-left">Order ID</th>
+            <th class="py-3 px-6 text-left">Supplier</th>
+            <th class="py-3 px-6 text-left">Total Amount</th>
+            <th class="py-3 px-6 text-left">Date Ordered</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for order in purchase_orders %}
+          <tr>
+            <td class="py-3 px-6">{{ order.id }}</td>
+            <td class="py-3 px-6">{{ order.supplier.name }}</td>
+            <td class="py-3 px-6">${{ "%.2f"|format(order.total_amount) }}</td>
+            <td class="py-3 px-6">
+              {{ order.created_at.strftime('%Y-%m-%d') }}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4" class="text-center py-6 text-gray-500">
+              No purchase orders found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% endblock %}

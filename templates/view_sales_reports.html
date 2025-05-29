@@ -1,0 +1,46 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="p-6">
+  <h2 class="text-2xl font-semibold text-rose-600 mb-4">Sales Report</h2>
+
+  {% if sales %}
+  <table class="min-w-full bg-white border rounded shadow-sm text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="py-2 px-4 border-b">#</th>
+        <th class="py-2 px-4 border-b">Product</th>
+        <th class="py-2 px-4 border-b">Quantity</th>
+        <th class="py-2 px-4 border-b">Payment</th>
+        <th class="py-2 px-4 border-b">Customer</th>
+        <th class="py-2 px-4 border-b">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sale in sales %}
+      <tr class="border-t">
+        <td class="py-2 px-4">{{ sale.id }}</td>
+        <td class="py-2 px-4">{{ sale.product }}</td>
+        <td class="py-2 px-4">{{ sale.quantity }}</td>
+        <td class="py-2 px-4 capitalize">{{ sale.payment_method }}</td>
+        <td class="py-2 px-4">{{ sale.customer or '-' }}</td>
+        <td class="py-2 px-4">
+          {{ sale.sale_date.strftime('%Y-%m-%d %H:%M') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="flex justify-end mb-4">
+    <a
+      href="{{ url_for('download_sales_csv') }}"
+      class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700"
+    >
+      Download CSV
+    </a>
+  </div>
+
+  {% else %}
+  <p>No sales recorded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

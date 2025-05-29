@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mx-auto px-6 py-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-extrabold mb-8 text-red-600 text-left">Dashboard</h1>
+
+    <!-- Existing Sales Trends Chart -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">Sales Trends</h2>
+        <div class="bg-white rounded-xl shadow-xl p-8">
+            <canvas id="salesTrendChart" width="400" height="200" data-labels='{{ labels | tojson }}'
+                data-data='{{ data | tojson }}'></canvas>
+        </div>
+    </div>
+
+    <!-- Sales Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-blue-600 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Daily Sales</h5>
+            <p class="text-3xl font-bold">{{ daily_total }} units</p>
+        </div>
+
+        <div class="bg-yellow-500 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Weekly Sales</h5>
+            <p class="text-3xl font-bold">{{ weekly_total }} units</p>
+        </div>
+
+        {% if role == 'admin' %}
+        <div class="bg-green-600 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Monthly Sales</h5>
+            <p class="text-3xl font-bold">{{ monthly_total }} units</p>
+        </div>
+
+        <div class="bg-red-600 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Yearly Sales</h5>
+            <p class="text-3xl font-bold">{{ yearly_total }} units</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Income Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div class="bg-indigo-600 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Daily Income</h5>
+            <p class="text-3xl font-bold">${{ "{:,.2f}".format(daily_income) }}</p>
+        </div>
+
+        <div class="bg-orange-500 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Weekly Income</h5>
+            <p class="text-3xl font-bold">${{ "{:,.2f}".format(weekly_income) }}</p>
+        </div>
+
+        {% if role == 'admin' %}
+        <div class="bg-teal-600 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Monthly Income</h5>
+            <p class="text-3xl font-bold">${{ "{:,.2f}".format(monthly_income) }}</p>
+        </div>
+
+        <div class="bg-pink-600 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+            <h5 class="text-xl font-semibold mb-2">Yearly Income</h5>
+            <p class="text-3xl font-bold">${{ "{:,.2f}".format(yearly_income) }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Product Sales Charts -->
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
+        <div>
+            <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">Product Sales - Daily</h2>
+            <div class="bg-white rounded-xl shadow-xl p-8">
+                <canvas id="dailyProductChart" width="400" height="250" data-labels='{{ daily_labels | tojson }}'
+                    data-data='{{ daily_data | tojson }}'></canvas>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">Product Sales - Weekly</h2>
+            <div class="bg-white rounded-xl shadow-xl p-8">
+                <canvas id="weeklyProductChart" width="400" height="250" data-labels='{{ weekly_labels | tojson }}'
+                    data-data='{{ weekly_data | tojson }}'></canvas>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">Product Sales - Monthly</h2>
+            <div class="bg-white rounded-xl shadow-xl p-8">
+                <canvas id="monthlyProductChart" width="400" height="250" data-labels='{{ monthly_labels | tojson }}'
+                    data-data='{{ monthly_data | tojson }}'></canvas>
+            </div>
+        </div>
+
+        {% if role == 'admin' %}
+        <div>
+            <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">Product Sales - Yearly</h2>
+            <div class="bg-white rounded-xl shadow-xl p-8">
+                <canvas id="yearlyProductChart" width="400" height="250" data-labels='{{ yearly_labels | tojson }}'
+                    data-data='{{ yearly_data | tojson }}'></canvas>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Sales Breakdown Lists -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10">
+        <!-- Daily Sales -->
+        <div>
+            <h5 class="text-xl font-semibold mb-6">Today's Sales</h5>
+            <div class="bg-white rounded-xl shadow-xl p-8 max-h-80 overflow-y-auto">
+                <ul class="divide-y divide-gray-200">
+                    {% for sale in daily_sales %}
+                    <li class="py-3 flex justify-between">
+                        <span>{{ sale.product }} ({{ sale.quantity }} units)</span>
+                        <span class="text-gray-400">{{ sale.sale_date.strftime('%H:%M:%S') }}</span>
+                    </li>
+                    {% endfor %}
+                    {% if daily_sales|length == 0 %}
+                    <li class="py-3 text-center text-gray-400">No sales today.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Weekly Sales -->
+        <div>
+            <h5 class="text-xl font-semibold mb-6">Weekly Sales</h5>
+            <div class="bg-white rounded-xl shadow-xl p-8 max-h-80 overflow-y-auto">
+                <ul class="divide-y divide-gray-200">
+                    {% for sale in weekly_sales %}
+                    <li class="py-3 flex justify-between">
+                        <span>{{ sale.product }} ({{ sale.quantity }} units)</span>
+                        <span class="text-gray-400">{{ sale.sale_date.strftime('%Y-%m-%d') }}</span>
+                    </li>
+                    {% endfor %}
+                    {% if weekly_sales|length == 0 %}
+                    <li class="py-3 text-center text-gray-400">No sales this week.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        {% if role == 'admin' %}
+        <!-- Monthly Sales -->
+        <div>
+            <h5 class="text-xl font-semibold mb-6">Monthly Sales</h5>
+            <div class="bg-white rounded-xl shadow-xl p-8 max-h-80 overflow-y-auto">
+                <ul class="divide-y divide-gray-200">
+                    {% for sale in monthly_sales %}
+                    <li class="py-3 flex justify-between">
+                        <span>{{ sale.product }} ({{ sale.quantity }} units)</span>
+                        <span class="text-gray-400">{{ sale.sale_date.strftime('%Y-%m-%d') }}</span>
+                    </li>
+                    {% endfor %}
+                    {% if monthly_sales|length == 0 %}
+                    <li class="py-3 text-center text-gray-400">No sales this month.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Yearly Sales -->
+        <div>
+            <h5 class="text-xl font-semibold mb-6">Yearly Sales</h5>
+            <div class="bg-white rounded-xl shadow-xl p-8 max-h-80 overflow-y-auto">
+                <ul class="divide-y divide-gray-200">
+                    {% for sale in yearly_sales %}
+                    <li class="py-3 flex justify-between">
+                        <span>{{ sale.product }} ({{ sale.quantity }} units)</span>
+                        <span class="text-gray-400">{{ sale.sale_date.strftime('%Y-%m-%d') }}</span>
+                    </li>
+                    {% endfor %}
+                    {% if yearly_sales|length == 0 %}
+                    <li class="py-3 text-center text-gray-400">No sales this year.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}

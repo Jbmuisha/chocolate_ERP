@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/mycss.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="screen-1">
+      <h1>Login</h1>
+
+      <form class="screen-1" action="{{ url_for('login') }}" method="POST">
+        <!-- Username Input Section -->
+        <div class="username">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+
+        <!-- Password Input Section -->
+        <div class="password">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+          <span class="show-hide" onclick="togglePassword()">Show/Hide</span>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <script>
+      function togglePassword() {
+        const passwordField = document.getElementById("password");
+        const type = passwordField.type === "password" ? "text" : "password";
+        passwordField.type = type;
+      }
+    </script>
+  </body>
+</html>

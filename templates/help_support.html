@@ -1,0 +1,58 @@
+{% extends "layout.html" %} {% block content %}
+<h2 class="text-2xl font-semibold mb-6 text-rose-600">Help & Support - FAQs</h2>
+
+<!-- FAQ Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+  {% for faq in faqs %}
+  <div
+    class="bg-white p-5 rounded shadow hover:shadow-lg transition-shadow duration-300"
+  >
+    <h3 class="font-semibold text-lg text-rose-600 mb-2">{{ faq.question }}</h3>
+    <p class="text-gray-700">{{ faq.answer }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Question submission form -->
+<div class="bg-white p-6 rounded shadow max-w-lg mx-auto">
+  <h3 class="text-xl font-semibold text-rose-600 mb-4">Ask a Question</h3>
+  <form method="POST" action="{{ url_for('help_support') }}">
+    <div class="mb-4">
+      <label for="name" class="block mb-1 font-medium">Full Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-600"
+        required
+      />
+    </div>
+    <div class="mb-4">
+      <label for="email" class="block mb-1 font-medium">Email Address</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-600"
+        required
+      />
+    </div>
+    <div class="mb-4">
+      <label for="question" class="block mb-1 font-medium">Your Question</label>
+      <textarea
+        id="question"
+        name="question"
+        rows="4"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-600"
+        required
+      ></textarea>
+    </div>
+    <button
+      type="submit"
+      class="bg-rose-600 text-white px-5 py-2 rounded hover:bg-rose-700 transition-colors"
+    >
+      Submit Question
+    </button>
+  </form>
+</div>
+{% endblock %}

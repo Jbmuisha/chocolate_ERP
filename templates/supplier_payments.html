@@ -1,0 +1,107 @@
+{% extends "layout.html" %} {% block content %}
+<h1 class="text-2xl font-semibold mb-6">Supplier Payments</h1>
+
+<!-- Add Payment Form -->
+<div class="bg-white p-6 rounded shadow mb-8">
+  <form
+    action="{{ url_for('supplier_payments') }}"
+    method="POST"
+    class="space-y-4"
+  >
+    <div>
+      <label for="supplier_id" class="block font-medium mb-1">Supplier</label>
+      <select
+        name="supplier_id"
+        id="supplier_id"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+        required
+      >
+        <option value="" disabled selected>Select a supplier</option>
+        {% for supplier in suppliers %}
+        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="amount" class="block font-medium mb-1">Amount</label>
+      <input
+        type="number"
+        step="0.01"
+        min="0"
+        name="amount"
+        id="amount"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+        placeholder="Enter payment amount"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="payment_method" class="block font-medium mb-1"
+        >Payment Method</label
+      >
+      <input
+        type="text"
+        name="payment_method"
+        id="payment_method"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+        placeholder="e.g. Cash, Bank Transfer"
+      />
+    </div>
+
+    <div>
+      <label for="notes" class="block font-medium mb-1">Notes</label>
+      <textarea
+        name="notes"
+        id="notes"
+        rows="3"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+        placeholder="Optional notes"
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="bg-rose-600 text-white px-6 py-2 rounded hover:bg-rose-700 transition"
+    >
+      Record Payment
+    </button>
+  </form>
+</div>
+
+<!-- Supplier Payments List -->
+<div class="bg-white p-6 rounded shadow">
+  <h2 class="text-xl font-semibold mb-4">Recent Payments</h2>
+  {% if supplier_payments %}
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-left text-sm border border-gray-200">
+      <thead class="bg-rose-100">
+        <tr>
+          <th class="px-4 py-2 border-b border-gray-300">Supplier</th>
+          <th class="px-4 py-2 border-b border-gray-300">Amount</th>
+          <th class="px-4 py-2 border-b border-gray-300">Payment Method</th>
+          <th class="px-4 py-2 border-b border-gray-300">Notes</th>
+          <th class="px-4 py-2 border-b border-gray-300">Payment Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for payment in supplier_payments %}
+        <tr class="border-b border-gray-200 hover:bg-gray-50">
+          <td class="px-4 py-2">{{ payment.supplier.name }}</td>
+          <td class="px-4 py-2">${{ "%.2f"|format(payment.amount) }}</td>
+          <td class="px-4 py-2">{{ payment.payment_method or '-' }}</td>
+          <td class="px-4 py-2">{{ payment.notes or '-' }}</td>
+          <td class="px-4 py-2">
+            {{ payment.payment_date.strftime('%Y-%m-%d %H:%M') }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-gray-500">No supplier payments recorded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
