@@ -14,13 +14,15 @@ from models import  Notification, PurchaseOrder, PurchaseOrderItem, Sale, Suppli
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = '8f3d2c3e1f2b4a6d8e3d4f0a1b2c3d4e'
+app.secret_key = 'your_secret_key'
 
-# Database config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/chocolate_erp'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL', 
+    'mysql+mysqlconnector://root:@localhost/chocolate_erp'  # fallback for local
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
 
+db.init_app(app)
 # ---------------- Home & Authentication ----------------
 
 @app.route('/')
