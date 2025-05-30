@@ -1,35 +1,42 @@
 {% extends 'layout.html' %} {% block content %}
-<div class="max-w-6xl mx-auto my-12 p-6 bg-white shadow-lg rounded-lg">
-  <h1 class="text-3xl font-bold mb-8 text-center">Supplier Payments</h1>
+<div class="max-w-6xl mx-auto my-12 px-6">
+  <div class="bg-white p-6 shadow-xl rounded-2xl border border-gray-200">
+    <h1 class="text-3xl font-bold mb-8 text-center text-red-600">
+      Supplier Payments
+    </h1>
 
-  {% if supplier_payments %}
-  <table class="min-w-full border border-gray-300 rounded-lg shadow-sm mb-12">
-    <thead class="bg-red-600 text-white">
-      <tr>
-        <th class="py-3 px-6 text-left">Payment ID</th>
-        <th class="py-3 px-6 text-left">Supplier</th>
-        <th class="py-3 px-6 text-left">Amount Paid</th>
-        <th class="py-3 px-6 text-left">Payment Date</th>
-        <th class="py-3 px-6 text-left">Payment Method</th>
-        <!-- Add more columns if needed -->
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-      {% for payment in supplier_payments %}
-      <tr>
-        <td class="py-3 px-6">{{ payment.id }}</td>
-        <td class="py-3 px-6">{{ payment.supplier.name }}</td>
-        <td class="py-3 px-6">${{ "%.2f"|format(payment.amount) }}</td>
-        <td class="py-3 px-6">
-          {{ payment.payment_date.strftime('%Y-%m-%d') }}
-        </td>
-        <td class="py-3 px-6">{{ payment.payment_method or 'N/A' }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p class="text-center text-gray-600">No supplier payments found.</p>
-  {% endif %}
+    {% if supplier_payments %}
+    <div class="overflow-x-auto mb-6">
+      <table
+        class="min-w-full table-auto border border-gray-300 rounded-lg overflow-hidden shadow-md"
+      >
+        <thead class="bg-red-500 text-white uppercase text-sm tracking-wider">
+          <tr>
+            <th class="py-3 px-6 text-left">Payment ID</th>
+            <th class="py-3 px-6 text-left">Supplier</th>
+            <th class="py-3 px-6 text-left">Amount Paid</th>
+            <th class="py-3 px-6 text-left">Payment Date</th>
+            <th class="py-3 px-6 text-left">Payment Method</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-800 divide-y divide-gray-200">
+          {% for payment in supplier_payments %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-3 px-6">{{ payment.id }}</td>
+            <td class="py-3 px-6">{{ payment.supplier.name }}</td>
+            <td class="py-3 px-6">${{ "%.2f"|format(payment.amount) }}</td>
+            <td class="py-3 px-6">
+              {{ payment.payment_date.strftime('%Y-%m-%d') }}
+            </td>
+            <td class="py-3 px-6">{{ payment.payment_method or 'N/A' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-600 italic">No supplier payments found.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

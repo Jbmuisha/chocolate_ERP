@@ -27,13 +27,6 @@
           class="hidden md:flex items-center space-x-6 text-sm text-gray-600"
         >
           <button
-            class="hover:text-rose-600"
-            aria-label="Search"
-            onclick="alert('Search clicked!')"
-          >
-            <i data-lucide="search" class="w-5 h-5"></i>
-          </button>
-          <button
             id="darkModeToggle"
             class="hover:text-rose-600"
             aria-label="Toggle Dark Mode"
@@ -90,7 +83,11 @@
           </div>
 
           <!-- Profile Icon -->
-          <button class="hover:text-rose-600" aria-label="Profile">
+
+          <div
+            class="flex items-center space-x-2 hover:text-rose-600 cursor-pointer"
+            aria-label="Profile"
+          >
             {% if session.get('user_image') %}
             <img
               src="{{ url_for('static', filename='uploads/users/' ~ session['user_image']) }}"
@@ -102,7 +99,10 @@
             {% else %}
             <i data-lucide="user-circle" class="w-6 h-6"></i>
             {% endif %}
-          </button>
+            <span class="hidden sm:inline font-medium text-gray-800 select-none"
+              >{{ session.get('username', 'User') }}</span
+            >
+          </div>
         </nav>
 
         <!-- Mobile Menu Button -->

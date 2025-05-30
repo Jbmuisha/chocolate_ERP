@@ -1,6 +1,9 @@
-{% extends 'layout.html' %} {% block content %}
+{% extends 'layout.html' %}
+{% block content %}
 <section class="px-4 sm:px-6 lg:px-8 py-6 max-w-md mx-auto">
-  <h2 class="text-xl font-semibold text-rose-600 mb-4">Add New Product</h2>
+  <h2 class="text-xl font-semibold text-rose-600 mb-4">
+    {{ 'Edit Product' if product else 'Add New Product' }}
+  </h2>
 
   <form method="POST" enctype="multipart/form-data" class="space-y-4">
     <div>
@@ -9,6 +12,7 @@
         type="text"
         id="name"
         name="name"
+        value="{{ product.name if product else '' }}"
         required
         class="w-full border rounded px-3 py-2"
       />
@@ -22,10 +26,10 @@
         required
         class="w-full border rounded px-3 py-2"
       >
-        <option value="" disabled selected>Select category</option>
-        <option value="chocolate">Chocolate</option>
-        <option value="candy">Candy</option>
-        <option value="gifts">Gifts</option>
+        <option value="" disabled {% if not product %}selected{% endif %}>Select category</option>
+        <option value="chocolate" {% if product and product.category == 'chocolate' %}selected{% endif %}>Chocolate</option>
+        <option value="candy" {% if product and product.category == 'candy' %}selected{% endif %}>Candy</option>
+        <option value="gifts" {% if product and product.category == 'gifts' %}selected{% endif %}>Gifts</option>
       </select>
     </div>
 
@@ -36,15 +40,16 @@
         step="0.01"
         id="price"
         name="price"
+        value="{{ product.price if product else '' }}"
         required
         class="w-full border rounded px-3 py-2"
       />
     </div>
 
     <div>
-      <label for="image" class="block mb-1 font-semibold"
-        >Product Image (JPEG or WEBP)</label
-      >
+      <label for="image" class="block mb-1 font-semibold">
+        {{ 'Change Image (optional)' if product else 'Product Image (JPEG or WEBP)' }}
+      </label>
       <input
         type="file"
         id="image"
@@ -58,7 +63,7 @@
       type="submit"
       class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700"
     >
-      Add Product
+      {{ 'Update Product' if product else 'Add Product' }}
     </button>
   </form>
 </section>

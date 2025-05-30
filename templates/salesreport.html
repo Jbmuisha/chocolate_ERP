@@ -1,33 +1,40 @@
 {% extends 'layout.html' %} {% block content %}
-{% if sales %}
-  <div class="overflow-x-auto shadow rounded-lg">
-    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-      <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+<div class="p-8 max-w-7xl mx-auto bg-white shadow-md rounded-xl">
+  <h2
+    class="text-4xl font-extrabold text-rose-600 mb-8 text-center tracking-tight"
+  >
+    Sales Records
+  </h2>
+
+  {% if sales %}
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <thead class="bg-rose-50 text-rose-700 uppercase text-xs font-semibold">
         <tr>
-          <th class="px-4 py-3">#</th>
-          <th class="px-4 py-3">Product</th>
-          <th class="px-4 py-3">Qty</th>
-          <th class="px-4 py-3">Payment</th>
-          <th class="px-4 py-3">Customer</th>
-          <th class="px-4 py-3">Date</th>
-          <th class="px-4 py-3">Actions</th>
+          <th class="px-6 py-4 text-left">#</th>
+          <th class="px-6 py-4 text-left">Product</th>
+          <th class="px-6 py-4 text-left">Quantity</th>
+          <th class="px-6 py-4 text-left">Payment</th>
+          <th class="px-6 py-4 text-left">Customer</th>
+          <th class="px-6 py-4 text-left">Date</th>
+          <th class="px-6 py-4 text-left">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y">
+      <tbody class="bg-white divide-y divide-gray-100">
         {% for sale in sales %}
-        <tr class="hover:bg-gray-50">
-          <td class="px-4 py-2">{{ loop.index }}</td>
-          <td class="px-4 py-2">{{ sale.product }}</td>
-          <td class="px-4 py-2">{{ sale.quantity }}</td>
-          <td class="px-4 py-2 capitalize">{{ sale.payment_method }}</td>
-          <td class="px-4 py-2">{{ sale.customer or '-' }}</td>
-          <td class="px-4 py-2">
+        <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+          <td class="px-6 py-4 font-medium text-gray-900">{{ loop.index }}</td>
+          <td class="px-6 py-4">{{ sale.product }}</td>
+          <td class="px-6 py-4">{{ sale.quantity }}</td>
+          <td class="px-6 py-4 capitalize">{{ sale.payment_method }}</td>
+          <td class="px-6 py-4">{{ sale.customer or '—' }}</td>
+          <td class="px-6 py-4">
             {{ sale.sale_date.strftime('%Y-%m-%d %H:%M') }}
           </td>
-          <td class="px-4 py-2 space-x-2">
+          <td class="px-6 py-4 space-x-3">
             <a
               href="{{ url_for('edit_sale', sale_id=sale.id) }}"
-              class="text-blue-600 hover:underline"
+              class="inline-block bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
               >Edit</a
             >
             <form
@@ -38,7 +45,7 @@
             >
               <button
                 type="submit"
-                class="text-red-600 hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                class="inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
               >
                 Delete
               </button>
@@ -50,7 +57,7 @@
     </table>
   </div>
   {% else %}
-  <p class="text-gray-500">No sales records found.</p>
+  <p class="text-center text-gray-500 text-lg mt-12">No sales records found.</p>
   {% endif %}
 </div>
 {% endblock %}

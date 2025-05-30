@@ -13,16 +13,15 @@ from sqlalchemy import func  # type: ignore
 from models import  Notification, PurchaseOrder, PurchaseOrderItem, Sale, Supplier, SupplierPayment,  db, User, Product, Inventory, ProductBatch
 from werkzeug.utils import secure_filename
 
+
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = '8f3d2c3e1f2b4a6d8e3d4f0a1b2c3d4e'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL', 
-    'mysql+mysqlconnector://root:@localhost/chocolate_erp'  # fallback for local
-)
+# Database config
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/chocolate_erp'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db.init_app(app)
+
 # ---------------- Home & Authentication ----------------
 
 @app.route('/')
@@ -553,6 +552,7 @@ def add_product():
         return redirect(url_for('product_list'))
 
     return render_template('add_product.html')
+
 
 
     

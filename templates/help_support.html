@@ -1,58 +1,82 @@
 {% extends "layout.html" %} {% block content %}
-<h2 class="text-2xl font-semibold mb-6 text-rose-600">Help & Support - FAQs</h2>
+<div class="max-w-6xl mx-auto my-12 px-6">
+  <h2 class="text-3xl font-bold mb-8 text-center text-rose-600">
+    Help & Support - FAQs
+  </h2>
 
-<!-- FAQ Grid -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-  {% for faq in faqs %}
-  <div
-    class="bg-white p-5 rounded shadow hover:shadow-lg transition-shadow duration-300"
-  >
-    <h3 class="font-semibold text-lg text-rose-600 mb-2">{{ faq.question }}</h3>
-    <p class="text-gray-700">{{ faq.answer }}</p>
-  </div>
-  {% endfor %}
-</div>
-
-<!-- Question submission form -->
-<div class="bg-white p-6 rounded shadow max-w-lg mx-auto">
-  <h3 class="text-xl font-semibold text-rose-600 mb-4">Ask a Question</h3>
-  <form method="POST" action="{{ url_for('help_support') }}">
-    <div class="mb-4">
-      <label for="name" class="block mb-1 font-medium">Full Name</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-600"
-        required
-      />
-    </div>
-    <div class="mb-4">
-      <label for="email" class="block mb-1 font-medium">Email Address</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-600"
-        required
-      />
-    </div>
-    <div class="mb-4">
-      <label for="question" class="block mb-1 font-medium">Your Question</label>
-      <textarea
-        id="question"
-        name="question"
-        rows="4"
-        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-600"
-        required
-      ></textarea>
-    </div>
-    <button
-      type="submit"
-      class="bg-rose-600 text-white px-5 py-2 rounded hover:bg-rose-700 transition-colors"
+  <!-- FAQ Grid -->
+  {% if faqs %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+    {% for faq in faqs %}
+    <div
+      class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition-shadow duration-300 border border-gray-200"
     >
-      Submit Question
-    </button>
-  </form>
+      <h3 class="text-lg font-semibold text-rose-600 mb-2">
+        {{ faq.question }}
+      </h3>
+      <p class="text-gray-700">{{ faq.answer }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-center text-gray-500 italic mb-12">
+    No FAQs available at the moment.
+  </p>
+  {% endif %}
+
+  <!-- Ask a Question Form -->
+  <div
+    class="bg-white p-8 shadow-xl rounded-2xl border border-gray-200 max-w-xl mx-auto"
+  >
+    <h3 class="text-2xl font-semibold text-center text-rose-600 mb-6">
+      Ask a Question
+    </h3>
+    <form method="POST" action="{{ url_for('help_support') }}">
+      <div class="mb-4">
+        <label for="name" class="block mb-1 font-medium text-gray-700"
+          >Full Name</label
+        >
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="email" class="block mb-1 font-medium text-gray-700"
+          >Email Address</label
+        >
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="question" class="block mb-1 font-medium text-gray-700"
+          >Your Question</label
+        >
+        <textarea
+          id="question"
+          name="question"
+          rows="4"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          required
+        ></textarea>
+      </div>
+      <div class="text-center">
+        <button
+          type="submit"
+          class="bg-rose-600 text-white px-6 py-2 rounded-xl hover:bg-rose-700 transition-colors"
+        >
+          Submit Question
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

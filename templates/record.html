@@ -1,13 +1,16 @@
 {% extends 'layout.html' %} {% block content %}
 <div class="p-6 max-w-5xl mx-auto">
-  <h2 class="text-2xl font-semibold text-rose-600 mb-4">Record Sale</h2>
+  <h2 class="text-3xl font-extrabold text-rose-600 mb-8 text-center">
+    Record Sale
+  </h2>
 
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %}
-  <div class="mb-4">
+  <div class="mb-6 max-w-xl mx-auto">
     {% for category, message in messages %}
     <div
-      class="p-3 rounded bg-green-100 text-green-700 border border-green-300 mb-2"
+      class="p-4 rounded-lg bg-green-100 text-green-700 border border-green-300 mb-3 shadow-sm"
+      role="alert"
     >
       {{ message }}
     </div>
@@ -18,41 +21,54 @@
   <form
     method="POST"
     action="/submit_sale"
-    class="space-y-4 mb-8 bg-white shadow-md rounded-lg p-6"
+    class="space-y-6 mb-12 bg-white shadow-lg rounded-xl p-8 max-w-xl mx-auto"
   >
     <div>
-      <label class="block text-sm font-medium text-gray-700"
+      <label
+        for="product_name"
+        class="block text-sm font-semibold text-gray-700 mb-2"
         >Product Name</label
       >
       <input
         type="text"
+        id="product_name"
         name="product_name"
-        class="w-full border px-3 py-2 rounded"
         required
+        class="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-500 transition"
+        placeholder="Enter product name"
       />
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700"
+      <label
+        for="quantity"
+        class="block text-sm font-semibold text-gray-700 mb-2"
         >Quantity Sold</label
       >
       <input
         type="number"
+        id="quantity"
         name="quantity"
-        class="w-full border px-3 py-2 rounded"
+        min="1"
         required
+        class="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-500 transition"
+        placeholder="Enter quantity sold"
       />
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700"
+      <label
+        for="payment_method"
+        class="block text-sm font-semibold text-gray-700 mb-2"
         >Payment Method</label
       >
       <select
+        id="payment_method"
         name="payment_method"
-        class="w-full border px-3 py-2 rounded"
         required
+        class="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-500 transition"
       >
+        <option value="" disabled selected>Select payment method</option>
         <option value="cash">Cash</option>
         <option value="card">Card</option>
         <option value="mobile">Mobile</option>
@@ -60,54 +76,66 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700"
+      <label
+        for="customer"
+        class="block text-sm font-semibold text-gray-700 mb-2"
         >Customer (optional)</label
       >
       <input
         type="text"
+        id="customer"
         name="customer"
-        class="w-full border px-3 py-2 rounded"
+        class="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-500 transition"
+        placeholder="Customer name"
       />
     </div>
 
     <button
       type="submit"
-      class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700"
+      class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-3 rounded-xl shadow-md transition"
     >
       Submit Sale
     </button>
   </form>
 
-  <h3 class="text-xl font-semibold text-gray-800 mb-4">Sales Records</h3>
+  <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+    Sales Records
+  </h3>
   {% if sales %}
-  <div class="overflow-x-auto shadow rounded-lg">
-    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-      <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+  <div class="overflow-x-auto shadow rounded-xl max-w-6xl mx-auto">
+    <table class="min-w-full bg-white rounded-lg">
+      <thead
+        class="bg-rose-100 text-rose-800 uppercase text-sm font-semibold select-none"
+      >
         <tr>
-          <th class="px-4 py-3">#</th>
-          <th class="px-4 py-3">Product</th>
-          <th class="px-4 py-3">Qty</th>
-          <th class="px-4 py-3">Payment</th>
-          <th class="px-4 py-3">Customer</th>
-          <th class="px-4 py-3">Date</th>
-          <th class="px-4 py-3">Actions</th>
+          <th class="px-6 py-3 text-left">#</th>
+          <th class="px-6 py-3 text-left">Product</th>
+          <th class="px-6 py-3 text-left">Qty</th>
+          <th class="px-6 py-3 text-left">Payment</th>
+          <th class="px-6 py-3 text-left">Customer</th>
+          <th class="px-6 py-3 text-left">Date</th>
+          <th class="px-6 py-3 text-left">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y">
+      <tbody class="divide-y divide-gray-200 text-gray-700">
         {% for sale in sales %}
-        <tr class="hover:bg-gray-50">
-          <td class="px-4 py-2">{{ loop.index }}</td>
-          <td class="px-4 py-2">{{ sale.product }}</td>
-          <td class="px-4 py-2">{{ sale.quantity }}</td>
-          <td class="px-4 py-2 capitalize">{{ sale.payment_method }}</td>
-          <td class="px-4 py-2">{{ sale.customer or '-' }}</td>
-          <td class="px-4 py-2">
+        <tr class="hover:bg-rose-50 transition cursor-default">
+          <td class="px-6 py-3 font-medium">{{ loop.index }}</td>
+          <td class="px-6 py-3 font-semibold">{{ sale.product }}</td>
+          <td class="px-6 py-3">{{ sale.quantity }}</td>
+          <td class="px-6 py-3 capitalize text-rose-700 font-semibold">
+            {{ sale.payment_method }}
+          </td>
+          <td class="px-6 py-3 italic text-gray-600">
+            {{ sale.customer or '-' }}
+          </td>
+          <td class="px-6 py-3 text-sm whitespace-nowrap">
             {{ sale.sale_date.strftime('%Y-%m-%d %H:%M') }}
           </td>
-          <td class="px-4 py-2 space-x-2">
+          <td class="px-6 py-3 space-x-4">
             <a
               href="{{ url_for('edit_sale', sale_id=sale.id) }}"
-              class="text-blue-600 hover:underline"
+              class="text-blue-600 hover:underline font-medium"
               >Edit</a
             >
             <form
@@ -118,7 +146,7 @@
             >
               <button
                 type="submit"
-                class="text-red-600 hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                class="text-red-600 hover:underline font-medium bg-transparent border-0 p-0 cursor-pointer"
               >
                 Delete
               </button>
@@ -130,7 +158,7 @@
     </table>
   </div>
   {% else %}
-  <p class="text-gray-500">No sales records found.</p>
+  <p class="text-center text-gray-500 italic">No sales records found.</p>
   {% endif %}
 </div>
 {% endblock %}

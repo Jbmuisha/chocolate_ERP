@@ -1,122 +1,132 @@
 {% extends "layout.html" %} {% block content %}
-<h2 class="text-2xl font-semibold mb-4">Manage Suppliers</h2>
+<div class="max-w-5xl mx-auto mt-10 px-6">
+  <div class="bg-white p-8 shadow-xl rounded-2xl border border-gray-200">
+    <h2 class="text-3xl font-bold text-rose-600 mb-6 text-center">
+      Manage Suppliers
+    </h2>
 
-<!-- Add/Edit Supplier Form -->
-<h3 class="text-xl mb-4">
-  {{ 'Add Supplier' if not edit_supplier else 'Edit Supplier' }}
-</h3>
+    <!-- Add/Edit Supplier Form -->
+    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+      {{ 'Add Supplier' if not edit_supplier else 'Edit Supplier' }}
+    </h3>
 
-<form method="POST" class="space-y-4">
-  <input
-    type="hidden"
-    name="supplier_id"
-    value="{{ edit_supplier.id if edit_supplier else '' }}"
-  />
+    <form method="POST" class="space-y-6">
+      <input
+        type="hidden"
+        name="supplier_id"
+        value="{{ edit_supplier.id if edit_supplier else '' }}"
+      />
 
-  <div>
-    <label for="name" class="block font-medium text-gray-700"
-      >Supplier Name</label
-    >
-    <input
-      type="text"
-      name="name"
-      id="name"
-      value="{{ edit_supplier.name if edit_supplier else '' }}"
-      required
-      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    />
-  </div>
-
-  <div>
-    <label for="address" class="block font-medium text-gray-700">Address</label>
-    <input
-      type="text"
-      name="address"
-      id="address"
-      value="{{ edit_supplier.address if edit_supplier else '' }}"
-      required
-      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    />
-  </div>
-
-  <div>
-    <label for="phone" class="block font-medium text-gray-700"
-      >Phone Number</label
-    >
-    <input
-      type="text"
-      name="phone"
-      id="phone"
-      value="{{ edit_supplier.phone if edit_supplier else '' }}"
-      required
-      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    />
-  </div>
-
-  <div>
-    <label for="email" class="block font-medium text-gray-700">Email</label>
-    <input
-      type="email"
-      name="email"
-      id="email"
-      value="{{ edit_supplier.email if edit_supplier else '' }}"
-      required
-      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    />
-  </div>
-
-  <button
-    type="submit"
-    class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-  >
-    {{ 'Add Supplier' if not edit_supplier else 'Update Supplier' }}
-  </button>
-</form>
-
-<hr class="my-6" />
-
-<!-- Supplier List -->
-<h3 class="text-xl mb-4">Existing Suppliers</h3>
-
-<table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-  <thead>
-    <tr class="bg-gray-100">
-      <th class="px-4 py-2 border-b text-left font-medium text-gray-700">
-        Supplier Name
-      </th>
-      <th class="px-4 py-2 border-b text-left font-medium text-gray-700">
-        Phone
-      </th>
-      <th class="px-4 py-2 border-b text-left font-medium text-gray-700">
-        Email
-      </th>
-      <th class="px-4 py-2 border-b text-left font-medium text-gray-700">
-        Actions
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for supplier in suppliers %}
-    <tr class="hover:bg-gray-50">
-      <td class="px-4 py-2 border-b">{{ supplier.name }}</td>
-      <td class="px-4 py-2 border-b">{{ supplier.phone }}</td>
-      <td class="px-4 py-2 border-b">{{ supplier.email }}</td>
-      <td class="px-4 py-2 border-b">
-        <a
-          href="{{ url_for('manage_supplier', supplier_id=supplier.id) }}"
-          class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm hover:bg-blue-600"
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+          >Supplier Name</label
         >
-          Edit
-        </a>
-        <a
-          href="{{ url_for('delete_supplier', supplier_id=supplier.id) }}"
-          class="bg-red-500 text-white py-1 px-3 rounded-md text-sm hover:bg-red-600 ml-2"
+        <input
+          type="text"
+          name="name"
+          id="name"
+          value="{{ edit_supplier.name if edit_supplier else '' }}"
+          required
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-rose-500 focus:border-rose-500"
+        />
+      </div>
+
+      <div>
+        <label
+          for="address"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Address</label
         >
-          Delete
-        </a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+        <input
+          type="text"
+          name="address"
+          id="address"
+          value="{{ edit_supplier.address if edit_supplier else '' }}"
+          required
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-rose-500 focus:border-rose-500"
+        />
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1"
+          >Phone Number</label
+        >
+        <input
+          type="text"
+          name="phone"
+          id="phone"
+          value="{{ edit_supplier.phone if edit_supplier else '' }}"
+          required
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-rose-500 focus:border-rose-500"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1"
+          >Email</label
+        >
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value="{{ edit_supplier.email if edit_supplier else '' }}"
+          required
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-rose-500 focus:border-rose-500"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-rose-600 text-white font-semibold py-2 rounded-lg hover:bg-rose-700 shadow transition"
+      >
+        {{ 'Add Supplier' if not edit_supplier else 'Update Supplier' }}
+      </button>
+    </form>
+
+    <hr class="my-10" />
+
+    <!-- Supplier List -->
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Existing Suppliers</h3>
+
+    <div class="overflow-x-auto">
+      <table
+        class="min-w-full bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden"
+      >
+        <thead
+          class="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wider"
+        >
+          <tr>
+            <th class="px-4 py-3 text-left">Supplier Name</th>
+            <th class="px-4 py-3 text-left">Phone</th>
+            <th class="px-4 py-3 text-left">Email</th>
+            <th class="px-4 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-800 divide-y divide-gray-100">
+          {% for supplier in suppliers %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-4 py-3">{{ supplier.name }}</td>
+            <td class="px-4 py-3">{{ supplier.phone }}</td>
+            <td class="px-4 py-3">{{ supplier.email }}</td>
+            <td class="px-4 py-3 space-x-2">
+              <a
+                href="{{ url_for('manage_supplier', supplier_id=supplier.id) }}"
+                class="inline-block bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 shadow"
+              >
+                Edit
+              </a>
+              <a
+                href="{{ url_for('delete_supplier', supplier_id=supplier.id) }}"
+                class="inline-block bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 shadow"
+              >
+                Delete
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}
